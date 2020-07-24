@@ -1,0 +1,81 @@
+﻿
+@{
+    ViewBag.Title = "Update";
+}
+
+@section scripts {
+    <script type="text/javascript">
+        var id = location.search.split('?')[1].split('=')[1]
+        var $customers = $("#customers");
+        console.log(id)
+
+        $.ajax({
+            type: "GET",
+            accepts: "application/json",
+            url: "https://localhost:5001/api/Customers/" + id,
+            contentType: "application/json",
+            dataType: "json",
+            success: function (result, textStatus, jqXHR) {
+                console.log(result);
+                $(".data").empty();
+                $customers.append(
+                    "<tr class=\"data\"><th>CustomerID</th>" +
+                    "<td><input type=\"text\" id=\"customerID\" value=\"" + result.customerID.trim() + "\"></td></tr >" +
+                    "<tr class=\"data\"><th>CompanyName</th>" +
+                    "<td><input type=\"text\" id=\"companyName\" value=\"" + result.companyName + "\"></td></tr >" +
+                    "<tr class=\"data\"><th>ContactName</th>" +
+                    "<td><input type=\"text\" id=\"contactName\" value=\"" + result.contactName + "\"></td></tr >" +
+                    "<tr class=\"data\"><th>CountryName</th>" +
+                    "<td><input type=\"text\" id=\"country\" value=\"" + result.country + "\"></td></tr >" +
+                    "<tr class=\"data\"><th>Phone</th>" +
+                    "<td><input type=\"text\" id=\"phone\" value=\"" + result.phone + "\"></td></tr >" +
+                    "<tr class=\"data\"><th>City</th>" +
+                    "<td><input type=\"text\" id=\"city\" value=\"" + result.city + "\"></td></tr >"
+                );
+            },
+            error: function (request, status, error) {
+            }
+        });
+
+        $('#btnUpdate').click(function () {
+            var newData = {
+                CustomerID: $("#customerID").val(),
+                CompanyName: $("#companyName").val(),
+                ContactName: $("#contactName").val(),
+                Country: $("#country").val(),
+                Phone: $("#phone").val(),
+                City: $("#city").val()
+            }
+            $.ajax({
+                type: "PUT",
+                accepts: "application/json",
+                url: "https://localhost:5001/api/Customers/" + $("#customerID").val(),
+                contentType: "application/json",
+                dataType: "json",
+                data: JSON.stringify(newData),
+                success: function (result, textStatus, jqXHR) {
+                    alert("更新成功")
+                },
+                error: function (request, status, error) {
+                    alert("更新失敗，請檢查資料格式是否有誤")
+                },
+                complete: function (request, status) {
+                    window.location.href = "http://localhost:56223/Customer";
+                }
+            });
+        });
+
+        $('#btnCancel').click(function () {
+            window.location.href = "http://localhost:56223/Customer";
+        });
+    </script>
+}
+
+    <center>
+        <h2>更新員工資料</h2>
+
+        <table id="customers" class="table"></table>
+        <button id="btnUpdate">Submit</button>
+        <button id="btnCancel">Cancel</button>
+    </center>
+

@@ -1,0 +1,86 @@
+﻿
+@{
+    ViewBag.Title = "Create";
+}
+
+@section scripts {
+    <script type="text/javascript">
+        $('#btnInsert').click(function () {
+            // 需對應Server端資料模型的欄位，否則資料無法自動繫結
+            // 不一定要輸入資料模型所有欄位
+            var newData = {
+                CustomerID: $("#customerID").val(),
+                CompanyName: $("#companyName").val(),
+                ContactName: $("#contactName").val(),
+                Country: $("#country").val(),
+                Phone: $("#phone").val(),
+                City: $("#city").val()
+            }
+            $.ajax({
+                type: "POST",
+                accepts: "application/json",
+                url: "https://localhost:5001/api/Customers/",
+                contentType: "application/json",
+                dataType: "json",
+                data: JSON.stringify(newData),
+                success: function (result, textStatus, jqXHR) {
+                    alert("新增成功")
+                },
+                error: function (request, status, error) {
+                    alert("新增失敗，請檢查資料格式是否有誤")
+                },
+                complete: function (request, status) {
+                    window.location.href = "http://localhost:56223/Customer";
+                }
+            });
+        });
+
+        $('#btnCancel').click(function () {
+            window.location.href = "http://localhost:56223/Customer";
+        });
+    </script>
+}
+    <center>
+        <h2>新增員工資料</h2>
+
+        <table class="table">
+            <tr>
+                <th>CustomerID</th>
+                <td>
+                    <input type="text" id="customerID">
+                </td>
+            </tr>
+            <tr>
+                <th>CompanyName</th>
+                <td>
+                    <input type="text" id="companyName">
+                </td>
+            </tr>
+            <tr>
+                <th>ContactName</th>
+                <td>
+                    <input type="text" id="contactName">
+                </td>
+            </tr>
+            <tr>
+                <th>Country</th>
+                <td>
+                    <input type="text" id="country">
+                </td>
+            </tr>
+            <tr>
+                <th>Phone</th>
+                <td>
+                    <input type="text" id="phone">
+                </td>
+            </tr>
+            <tr>
+                <th>City</th>
+                <td>
+                    <input type="text" id="city">
+                </td>
+            </tr>
+        </table>
+        <button id="btnInsert">Submit</button>
+        <button id="btnCancel">Cancel</button>
+    </center>

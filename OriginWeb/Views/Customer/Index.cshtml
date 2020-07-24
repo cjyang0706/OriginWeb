@@ -1,0 +1,112 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+@section scripts {
+    <script type="text/javascript">
+        var $customers = $("#customers");
+        var style = "style=\"padding:5px 5px;color:#555;background - color:#fff;border-bottom:1px solid #915957\"";
+
+        $.ajax({
+            type: "GET",
+            accepts: "application/json",
+            url: "https://localhost:5001/api/Customers",
+            contentType: "application/json",
+            dataType: "json", //指定傳回的物件為json
+            success: function (result, textStatus, jqXHR) {
+                console.log(result);
+                $(".data").empty();
+                $.each(result, function (index, item) {
+                    $customers.append(
+                        "<tr class=\"data\"><td " + style + ">" + item.customerID + "</td>" +
+                        "<td " + style + ">" + item.companyName + "</td>" +
+                        "<td " + style + ">" + item.contactName + "</td>" +
+                        "<td " + style + ">" + item.country + "</td>" +
+                        "<td " + style + ">" + item.phone + "</td>" +
+                        "<td " + style + ">" + item.city + "</td>" +
+                        "<td " + style + "><a href=\"http://localhost:56223/Customer/Update?id=" + item.customerID + "\">Edit</a></td>" +
+                        "<td " + style + "><a href=\"http://localhost:56223/Customer/Delete?id=" + item.customerID + "\">Delete</a></td></tr >"
+                    );
+                });
+            },
+            error: function (request, status, error) {
+            }
+        });
+
+        $('#btnQuery').click(function () {
+            $.ajax({
+                type: "GET",
+                accepts: "application/json",
+                url: "https://localhost:5001/api/Customers/" + $("#cID").val(),
+                contentType: "application/json",
+                dataType: "json",
+                success: function (result, textStatus, jqXHR) {
+                    console.log(result);
+                    $(".data").empty();
+                    $customers.append(
+                        "<tr class=\"data\"><td " + style + ">" + result.customerID.trim() + "</td>" +
+                        "<td " + style + ">" + result.companyName + "</td>" +
+                        "<td " + style + ">" + result.contactName + "</td>" +
+                        "<td " + style + ">" + result.country + "</td>" +
+                        "<td " + style + ">" + result.phone + "</td>" +
+                        "<td " + style + ">" + result.city + "</td>" +
+                        "<td " + style + "><a href=\"http://localhost:56223/Customer/Update?id=" + result.customerID + "\">Edit</a></td>" +
+                        "<td " + style + "><a href=\"http://localhost:56223/Customer/Delete?id=" + result.customerID + "\">Delete</a></td></tr >"
+                    );
+                },
+                error: function (request, status, error) {
+                }
+            });
+        });
+    </script>
+}
+
+<html>
+    <head>
+        <style>
+            table.TB_COLLAPSE {
+                width: 100%;
+                border-collapse: collapse;
+            }
+
+            table.TB_COLLAPSE caption {
+                padding: 10px;
+                font-size: 24px;
+                background-color: #f3f6f9;
+                text-align: center;
+            }
+
+            table.TB_COLLAPSE thead th {
+                padding: 5px 5px;
+                color: #fff;
+                background-color: #915957;
+            }
+        </style>
+    </head>
+    <body>
+        <br />
+        <a href="~/Customer/Create">Create</a>
+        <center>
+            <button id="btnQuery">Search</button>
+            <input type="text" id="cID">
+        </center>
+        <br />
+        <br />
+        <table id="customers" class="TB_COLLAPSE">
+            <caption>Customer Data Form</caption>
+            <thead>
+                <tr>
+                    <th>Customer ID</th>
+                    <th>Company Name</th>
+                    <th>Contact Name</th>
+                    <th>Country</th>
+                    <th>Phone</th>
+                    <th>City</th>
+                    <th>Edit</th>
+                    <th>Delete</th>
+                </tr>
+            </thead>
+        </table>
+    </body>
+</html>

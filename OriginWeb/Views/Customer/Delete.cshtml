@@ -1,0 +1,69 @@
+﻿
+@{
+    ViewBag.Title = "Delete";
+}
+
+@section scripts {
+    <script type="text/javascript">
+        var id = location.search.split('?')[1].split('=')[1]
+        var $customers = $("#customers");
+        console.log(id)
+
+        $.ajax({
+            type: "GET",
+            accepts: "application/json",
+            url: "https://localhost:5001/api/Customers/" + id,
+            contentType: "application/json",
+            dataType: "json",
+            success: function (result, textStatus, jqXHR) {
+                console.log(result);
+                $(".data").empty();
+                $customers.append(
+                    "<tr class=\"data\"><th>CustomerID</th>" +
+                    "<td><input type=\"text\" disabled=\"disabled\" id=\"customerID\" value=\"" + result.customerID.trim() + "\"></td></tr >" +
+                    "<tr class=\"data\"><th>CompanyName</th>" +
+                    "<td><input type=\"text\" disabled=\"disabled\" id=\"companyName\" value=\"" + result.companyName + "\"></td></tr >" +
+                    "<tr class=\"data\"><th>ContactName</th>" +
+                    "<td><input type=\"text\" disabled=\"disabled\" id=\"contactName\" value=\"" + result.contactName + "\"></td></tr >" +
+                    "<tr class=\"data\"><th>CountryName</th>" +
+                    "<td><input type=\"text\" disabled=\"disabled\" id=\"country\" value=\"" + result.country + "\"></td></tr >" +
+                    "<tr class=\"data\"><th>Phone</th>" +
+                    "<td><input type=\"text\" disabled=\"disabled\" id=\"phone\" value=\"" + result.phone + "\"></td></tr >" +
+                    "<tr class=\"data\"><th>City</th>" +
+                    "<td><input type=\"text\" disabled=\"disabled\" id=\"city\" value=\"" + result.city + "\"></td></tr >"
+                );
+            },
+            error: function (request, status, error) {
+            }
+        });
+
+        $('#btnDelete').click(function () {
+            $.ajax({
+                type: "DELETE",
+                url: "https://localhost:5001/api/Customers/" + $("#customerID").val(),
+                success: function (result, textStatus, jqXHR) {
+                    alert("刪除成功")
+                },
+                error: function (request, status, error) {
+                    alert("刪除失敗，請聯絡維護人員!")
+                },
+                complete: function (request, status) {
+                    window.location.href = "http://localhost:56223/Customer";
+                }
+            });
+        });
+
+        $('#btnCancel').click(function () {
+            window.location.href = "http://localhost:56223/Customer";
+        });
+    </script>
+}
+
+<center>
+    <h2>刪除員工資料</h2>
+
+    <table id="customers" class="table"></table>
+    <button id="btnDelete">Submit</button>
+    <button id="btnCancel">Cancel</button>
+</center>
+
